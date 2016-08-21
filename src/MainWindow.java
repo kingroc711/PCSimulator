@@ -20,8 +20,8 @@ import javax.swing.JTextArea;
  * Created by kingroc on 16-8-19.
  */
 public class MainWindow extends JFrame implements ActionListener {
-    private JTextArea mDisplay;
-    private JTextArea mMessage;
+    private JTextArea mSendMessage;
+    private JTextArea mDisplayMessage;
     private JPanel contentPane;
     private JButton mSendButton = new JButton("发送");
     private JButton mShutButton = new JButton("关闭");
@@ -36,19 +36,19 @@ public class MainWindow extends JFrame implements ActionListener {
         GridBagLayout gbl_contentPane = new GridBagLayout();// 创建网格组布局
         contentPane.setLayout(gbl_contentPane);// 使用网格组布局
 
-        mDisplay = new JTextArea();
+        mSendMessage = new JTextArea();
         JPanel displayPanel = new JPanel();
         displayPanel.setLayout(new GridLayout(1, 1));
         displayPanel.setBorder(BorderFactory.createTitledBorder("Edit Area"));
-        displayPanel.add(new JScrollPane(mDisplay));
+        displayPanel.add(new JScrollPane(mSendMessage));
 
         // --begin:分别将两个JTextArea通过JPanel放到JFrame中。
-        mMessage = new JTextArea();
-        mMessage.setEditable(false);// 利用setEditable()方法将另一个JTextArea设置为不可编辑.
+        mDisplayMessage = new JTextArea();
+        mDisplayMessage.setEditable(false);// 利用setEditable()方法将另一个JTextArea设置为不可编辑.
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new GridLayout(1, 1));
         messagePanel.setBorder(BorderFactory.createTitledBorder("Message"));
-        messagePanel.add(new JScrollPane(mMessage));
+        messagePanel.add(new JScrollPane(mDisplayMessage));
 
 
         JPanel buttonPanel = new JPanel();
@@ -105,7 +105,7 @@ public class MainWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()== mSendButton){
-            mMessage.append(mDisplay.getText() + "\n\r");
+            mDisplayMessage.append(mSendMessage.getText() + "\n\r");
         }else if(e.getSource()==mShutButton){
             System.exit(0);
         }

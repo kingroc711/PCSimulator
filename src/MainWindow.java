@@ -50,6 +50,9 @@ public class MainWindow extends JFrame implements ActionListener {
         messagePanel.setBorder(BorderFactory.createTitledBorder("Message"));
         messagePanel.add(new JScrollPane(mDisplayMessage));
 
+        /*Create UPD Server*/
+        new UDPDiscardSServer(8091, mDisplayMessage);
+        new MyHTTPServer(8092, mDisplayMessage);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2));

@@ -1,6 +1,8 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import net.sf.json.JSONObject;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -63,7 +65,8 @@ public class MyHTTPServer {
                 System.out.println(sb.toString());
                 insert(sb.toString(), mTextArea);
 
-                String responseContent = "aaa";
+                String responseContent = analysisData(sb.toString());
+
                 httpExchange.sendResponseHeaders(200, responseContent.length());
                 OutputStream out = httpExchange.getResponseBody();
                 out.write(responseContent.getBytes());
@@ -74,6 +77,29 @@ public class MyHTTPServer {
                 System.out.println("not POST " + httpExchange.getRequestMethod());
             }
 
+        }
+
+        private String analysisData(String s) {
+            String response = "";
+            JSONObject jsonObject = JSONObject.fromObject(s);
+            String method = (String)jsonObject.get("method");
+            String message = (String)jsonObject.get("message");
+
+            if(method.equalsIgnoreCase("GET")){
+                if(message.equalsIgnoreCase("ALL")){
+
+                }else if(message.equalsIgnoreCase("PORT")){
+
+                }else{
+                    response = "message illegittimate.";
+                }
+            }else if (method.equalsIgnoreCase("SET")){
+
+            }else{
+                response = "method illegitimate.";
+            }
+
+            return response;
         }
     }
 }

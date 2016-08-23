@@ -23,6 +23,7 @@ public class MainWindow extends JFrame implements ActionListener {
     private JTextArea mSendMessage;
     private JTextArea mDisplayMessage;
     private JPanel contentPane;
+    private static Thread mThread;
     private JButton mSendButton = new JButton("发送");
     private JButton mShutButton = new JButton("关闭");
 
@@ -51,7 +52,9 @@ public class MainWindow extends JFrame implements ActionListener {
         messagePanel.add(new JScrollPane(mDisplayMessage));
 
         /*Create UPD Server*/
-        new UDPDiscardSServer(8091, mDisplayMessage);
+        mThread = new UDPDiscardSServer(8091, mDisplayMessage);
+        mThread.start();
+
         new MyHTTPServer(8092, mDisplayMessage);
 
         JPanel buttonPanel = new JPanel();
@@ -94,12 +97,17 @@ public class MainWindow extends JFrame implements ActionListener {
         contentPane.add(buttonPanel, gbc_p3);// 增加按钮及其约束条件
     }
 
+    private static void systemExit(int state){
+        mThread.interrupt();
+        System.exit(state);
+    }
+
     public static void main(String args[]) {
 
         JFrame f = new MainWindow();
         f.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                System.exit(0);
+                systemExit(0);
             }
         });
         f.setVisible(true);
@@ -110,7 +118,7 @@ public class MainWindow extends JFrame implements ActionListener {
         if(e.getSource()== mSendButton){
             mDisplayMessage.append(mSendMessage.getText() + "\n\r");
         }else if(e.getSource()==mShutButton){
-            System.exit(0);
+            systemExit(0);
         }
     }
 }

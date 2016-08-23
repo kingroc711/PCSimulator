@@ -1,14 +1,22 @@
-package device;
-
 /**
  * Created by kingroc on 16-8-22.
  */
-public class baseDevice {
+public class PortDeviceInfo {
     private String customName;
     private String className;
     private String modular;
     private String port;
     private String values;
+    private String onceOpenSecond;
+
+    public PortDeviceInfo(String customName, String className, String modular, String values, String port, String onceOpenSecond) {
+        this.onceOpenSecond = onceOpenSecond;
+        this.customName = customName;
+        this.className = className;
+        this.modular = modular;
+        this.values = values;
+        this.port = port;
+    }
 
     public String getCustomName() {
         return customName;
@@ -19,6 +27,7 @@ public class baseDevice {
     }
 
     public String getClassName() {
+
         return className;
     }
 
@@ -48,5 +57,13 @@ public class baseDevice {
 
     public void setValues(String values) {
         this.values = values;
+    }
+
+    public String getOnceOpenSecond() {
+        return onceOpenSecond;
+    }
+
+    public void setOnceOpenSecond(String onceOpenSecond) {
+        this.onceOpenSecond = onceOpenSecond;
     }
 }

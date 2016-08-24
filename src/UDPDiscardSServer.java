@@ -1,12 +1,7 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Formatter;
-
-import net.sf.json.JSONObject;
-
 import javax.swing.*;
 
 public class UDPDiscardSServer extends Thread {

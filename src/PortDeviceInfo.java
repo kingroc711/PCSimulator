@@ -9,7 +9,7 @@ public class PortDeviceInfo {
     private String values;
     private String onceOpenSecond;
 
-    public PortDeviceInfo(String customName, String className, String modular, String values, String port, String onceOpenSecond) {
+    public PortDeviceInfo(String customName, String className, String modular, String port, String values,  String onceOpenSecond) {
         this.onceOpenSecond = onceOpenSecond;
         this.customName = customName;
         this.className = className;

@@ -1,8 +1,6 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import net.sf.json.JSONObject;
-
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -12,6 +10,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URI;
 
 /**
  * Created by kingroc on 16-8-22.
@@ -35,8 +34,6 @@ public class MyHTTPServer {
     }
 
     class MyHandler implements HttpHandler {
-
-
         private void insert(String string, JTextArea textArea){
             Document doc = textArea.getDocument();
             SimpleAttributeSet attrSet = new SimpleAttributeSet();
@@ -51,9 +48,12 @@ public class MyHTTPServer {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
+
             if(httpExchange.getRequestMethod().equalsIgnoreCase("POST")){
                 InetAddress remoteAddr = httpExchange.getRemoteAddress().getAddress();
                 System.out.println("remoteAddr : " + remoteAddr.toString());
+                URI url = httpExchange.getRequestURI();
+                System.out.println("url : " + url);
 
                 BufferedReader requestReader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), "UTF-8"));
                 StringBuffer sb = new StringBuffer();
@@ -65,7 +65,13 @@ public class MyHTTPServer {
                 System.out.println(sb.toString());
                 insert(sb.toString(), mTextArea);
 
-                String responseContent = analysisData(sb.toString());
+                String responseContent = "";
+
+                if(url.equals("getallport")){
+                    responseContent = analysisDataGetAllPort();
+                }else {
+                    responseContent = analysisData(sb.toString());
+                }
 
                 httpExchange.sendResponseHeaders(200, responseContent.length());
                 OutputStream out = httpExchange.getResponseBody();
@@ -79,11 +85,15 @@ public class MyHTTPServer {
 
         }
 
+        private String analysisDataGetAllPort(){
+
+            return SimulateData.getAll();
+        }
+
         private String analysisData(String s) {
             String response = "";
-            JSONObject jsonObject = JSONObject.fromObject(s);
-            String method = (String)jsonObject.get("method");
-            String message = (String)jsonObject.get("message");
+            String method = null;
+            String message = null;
 
             if(method.equalsIgnoreCase("GET")){
                 if(message.equalsIgnoreCase("ALL")){

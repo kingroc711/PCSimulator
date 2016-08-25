@@ -79,6 +79,98 @@ public class SimulateData {
         all.add(createModule_4());
     }
 
+    private static ModuleDeviceInfo find(String module){
+        ModuleDeviceInfo find_m = null;
+        for(ModuleDeviceInfo m : all){
+            if(m.getSerialName().equals(module)){
+                find_m = m;
+                break;
+            }
+        }
+
+        if(find_m == null) {
+            System.out.print("can not find module");
+            return null;
+        }
+
+        return find_m;
+    }
+
+    private static PortDeviceInfo find(String module, String port){
+        ModuleDeviceInfo find_m = find(module);
+        if(find_m == null) {
+            System.out.print("can not find module");
+            return null;
+        }
+
+        PortDeviceInfo find_p = null;
+        for (PortDeviceInfo p : find_m) {
+            if (p.getPort().equals(port)) {
+                find_p = p;
+                break;
+            }
+        }
+
+        if(find_p == null){
+            System.out.println("can not find port");
+            return null;
+        }
+
+        return find_p;
+    }
+
+    public static String set(ModuleDeviceInfo m){
+        ModuleDeviceInfo find = find(m.getSerialName());
+        if(find == null){
+            return null;
+        }
+
+        find.setCustomName(m.getSerialName());
+
+        Gson gson = new Gson();
+        gson.toJson(find);
+
+        return gson.toString();
+    }
+
+    public static String set(PortDeviceInfo p){
+        PortDeviceInfo find = find(p.getSerialName(), p.getPort());
+        if(find == null){
+            return null;
+        }
+
+        Gson gson = new Gson();
+        gson.toJson(find);
+
+        return gson.toString();
+    }
+
+    public static String get(String module){
+        ModuleDeviceInfo m = find(module);
+        Gson gson = new Gson();
+        String json = gson.toJson(m);
+        System.out.println("module : " + json);
+        return json;
+    }
+
+    public static String get(String module, String port){
+        if (all == null) {
+            createSimulateData();
+        }
+
+        PortDeviceInfo find = find(module, port);
+
+        if(find == null){
+            System.out.println("can not find port");
+            return null;
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(find);
+        System.out.println("get module : " + module + ", port : " +  port +  " , json : " + json);
+        return json;
+    }
+
     public static String getAll() {
         if (all == null) {
             createSimulateData();

@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -16,7 +17,8 @@ import java.net.URI;
  * Created by kingroc on 16-8-22.
  */
 public class MyHTTPServer {
-        private JTextArea mTextArea;
+    private JTextArea mTextArea;
+    private String mIP = null;
 
     public MyHTTPServer(int port, JTextArea textArea) {
         mTextArea = textArea;
@@ -67,10 +69,18 @@ public class MyHTTPServer {
 
                 String responseContent = "";
 
-                if(url.equals("getallport")){
+                if(url.equals("/getallport")) {
                     responseContent = analysisDataGetAllPort();
-                }else {
-                    responseContent = analysisData(sb.toString());
+                }else if(url.equals("/get_port")){
+                    responseContent = analysisDataGetPort(sb.toString());
+                }else if(url.equals("/get_module")){
+                    responseContent = analysisDataGetModule(sb.toString());
+                }else if(url.equals("/set_port")){
+                    responseContent = analysisDataSetPort(sb.toString());
+                }else if(url.equals("/set_module")){
+                    responseContent = analysisDataSetModule(sb.toString());
+                }else  {
+                    responseContent = "Do not have this API.";
                 }
 
                 httpExchange.sendResponseHeaders(200, responseContent.length());
@@ -80,7 +90,15 @@ public class MyHTTPServer {
                 out.close();
                 insert(responseContent, mTextArea);
             }else{
+                String responseContent = "Please use get !";
+                System.out.println("url " + httpExchange.getRequestURI().toString());
                 System.out.println("not POST " + httpExchange.getRequestMethod());
+                System.out.println("remoteAddr : " + httpExchange.getRemoteAddress().getAddress().getHostAddress());
+                httpExchange.sendResponseHeaders(404, responseContent.length());
+                OutputStream out = httpExchange.getResponseBody();
+                out.write(responseContent.getBytes());
+                out.flush();
+                out.close();
             }
 
         }
@@ -90,26 +108,28 @@ public class MyHTTPServer {
             return SimulateData.getAll();
         }
 
-        private String analysisData(String s) {
-            String response = "";
-            String method = null;
-            String message = null;
+        private String analysisDataGetPort(String s){
+            Gson gson = new Gson();
+            PortDeviceInfo p = gson.fromJson(s, PortDeviceInfo.class);
+            return SimulateData.get(p.getSerialName(), p.getPort());
+        }
 
-            if(method.equalsIgnoreCase("GET")){
-                if(message.equalsIgnoreCase("ALL")){
+        private String analysisDataGetModule(String s){
+            Gson gson = new Gson();
+            ModuleDeviceInfo m = gson.fromJson(s, ModuleDeviceInfo.class);
+            return SimulateData.get(m.getSerialName());
+        }
 
-                }else if(message.equalsIgnoreCase("PORT")){
+        private String analysisDataSetPort(String s){
+            Gson gson = new Gson();
+            PortDeviceInfo p = gson.fromJson(s, PortDeviceInfo.class);
+            return SimulateData.set(p);
+        }
 
-                }else{
-                    response = "message illegittimate.";
-                }
-            }else if (method.equalsIgnoreCase("SET")){
-
-            }else{
-                response = "method illegitimate.";
-            }
-
-            return response;
+        private String analysisDataSetModule(String s){
+            Gson gson = new Gson();
+            ModuleDeviceInfo m = gson.fromJson(s, ModuleDeviceInfo.class);
+            return SimulateData.set(m);
         }
     }
 }

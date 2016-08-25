@@ -4,7 +4,7 @@
 public class PortDeviceInfo {
     private String customName;
     private String className;
-    private String modular;
+    private String SerialName;
     private String port;
     private String values;
     private String onceOpenSecond;
@@ -13,7 +13,7 @@ public class PortDeviceInfo {
         this.onceOpenSecond = onceOpenSecond;
         this.customName = customName;
         this.className = className;
-        this.modular = modular;
+        this.SerialName = modular;
         this.values = values;
         this.port = port;
     }
@@ -35,12 +35,12 @@ public class PortDeviceInfo {
         this.className = className;
     }
 
-    public String getModular() {
-        return modular;
+    public String getSerialName() {
+        return SerialName;
     }
 
-    public void setModular(String modular) {
-        this.modular = modular;
+    public void setSerialName(String serialName) {
+        this.SerialName = serialName;
     }
 
     public String getPort() {
